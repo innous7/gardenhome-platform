@@ -1,3 +1,5 @@
+export const runtime = 'edge'
+
 import { requireUser } from '@/lib/auth'
 import { createQuoteRequest, getMyQuoteRequests } from '@/actions/quote'
 

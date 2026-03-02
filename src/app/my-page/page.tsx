@@ -1,3 +1,5 @@
+export const runtime = 'edge'
+
 import { requireUser } from '@/lib/auth'
 import LogoutButton from '@/components/common/logout-button'
 import { getMyReceivedQuotes } from '@/actions/quote'

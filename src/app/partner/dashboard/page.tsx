@@ -1,3 +1,5 @@
+export const runtime = 'edge'
+
 import { requireRole } from '@/lib/auth'
 import { createPartnerQuote, getPendingQuoteRequests } from '@/actions/quote'
 import { createSupabaseServerClient } from '@/lib/supabase/server'

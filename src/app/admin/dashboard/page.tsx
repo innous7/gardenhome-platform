@@ -1,3 +1,5 @@
+export const runtime = 'edge'
+
 import { requireRole } from '@/lib/auth'
 import { getPartners, updatePartnerStatus } from '@/actions/partner'
 import { createPartner, deletePartner, getAdminDashboardStats } from '@/actions/admin'
