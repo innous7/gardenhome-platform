@@ -5,8 +5,10 @@ import { usePathname } from 'next/navigation'
 
 const menus = [
   { href: '/', label: '홈' },
-  { href: '/portfolio', label: '탐색' },
-  { href: '/request-quote', label: '견적' },
+  { href: '/portfolio', label: '포트폴리오' },
+  { href: '/request-quote', label: '견적요청' },
+  { href: '/community', label: '커뮤니티' },
+  { href: '/flotren', label: '플로트렌' },
   { href: '/my-page', label: '마이' },
 ]
 
@@ -39,7 +41,7 @@ export default function MainNavigation() {
 
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white md:hidden">
         <div className="mx-auto grid max-w-md grid-cols-4">
-          {menus.map((menu) => {
+          {menus.slice(0, 4).map((menu) => {
             const active = pathname === menu.href
             return (
               <Link
