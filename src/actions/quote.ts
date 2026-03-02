@@ -48,6 +48,9 @@ export async function createPartnerQuote(formData: FormData) {
   const user = await ensureCurrentUserRow()
   if (!user) return
 
+  const { data: me } = await supabase.from('Users').select('role,partnerStatus').eq('id', user.id).single()
+  if (!me || me.role !== 'PARTNER' || me.partnerStatus !== 'APPROVED') return
+
   const requestId = String(formData.get('requestId') || '')
   const totalPrice = Number(formData.get('totalPrice') || 0)
   const note = String(formData.get('note') || '')
@@ -113,5 +116,12 @@ export async function getMyReceivedQuotes() {
     .in('requestId', requestIds)
     .order('createdAt', { ascending: false })
 
-  return quotes || []
+  const companyIds = Array.from(new Set((quotes || []).map((q: { companyId: string }) => q.companyId)))
+  const { data: companies } = await supabase.from('Users').select('id,name,email').in('id', companyIds)
+  const companyMap = new Map((companies || []).map((c: { id: string; name: string | null; email: string }) => [c.id, c]))
+
+  return (quotes || []).map((q: { companyId: string } & Record<string, unknown>) => ({
+    ...q,
+    company: companyMap.get(q.companyId) || null,
+  }))
 }
