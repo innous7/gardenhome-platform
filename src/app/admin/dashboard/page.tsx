@@ -3,6 +3,7 @@ export const runtime = 'edge'
 import { requireRole } from '@/lib/auth'
 import { getPartners, updatePartnerStatus } from '@/actions/partner'
 import { createPartner, deletePartner, getAdminDashboardStats } from '@/actions/admin'
+import { UiBadge, UiButton, UiCard } from '@/components/common/ui'
 
 export default async function AdminDashboardPage() {
   await requireRole(['ADMIN'])
@@ -10,63 +11,64 @@ export default async function AdminDashboardPage() {
   const stats = await getAdminDashboardStats()
 
   return (
-    <main className="mx-auto max-w-5xl p-6">
-      <h1 className="text-2xl font-bold text-[#2E5C31]">관리자 대시보드</h1>
+    <main className="min-h-screen bg-[#f6f7f5]">
+      <section className="mx-auto max-w-6xl px-6 py-10">
+        <h1 className="text-2xl font-bold text-[#1f4d2f]">관리자 대시보드</h1>
 
-      <section className="mt-4 grid gap-4 md:grid-cols-3">
-        <article className="rounded-xl border bg-white p-4">
-          <p className="text-sm text-gray-600">총 견적 요청</p>
-          <p className="text-2xl font-bold">{stats.requestsCount}</p>
-        </article>
-        <article className="rounded-xl border bg-white p-4">
-          <p className="text-sm text-gray-600">파트너 승인 대기</p>
-          <p className="text-2xl font-bold">{stats.pendingPartners}</p>
-        </article>
-        <article className="rounded-xl border bg-white p-4">
-          <p className="text-sm text-gray-600">견적 전환율</p>
-          <p className="text-2xl font-bold">{stats.conversion}%</p>
-        </article>
-      </section>
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
+          <UiCard>
+            <p className="text-sm text-slate-600">총 견적 요청</p>
+            <p className="mt-1 text-3xl font-bold">{stats.requestsCount}</p>
+          </UiCard>
+          <UiCard>
+            <p className="text-sm text-slate-600">승인 대기 파트너</p>
+            <p className="mt-1 text-3xl font-bold">{stats.pendingPartners}</p>
+          </UiCard>
+          <UiCard>
+            <p className="text-sm text-slate-600">견적 전환율</p>
+            <p className="mt-1 text-3xl font-bold">{stats.conversion}%</p>
+          </UiCard>
+        </div>
 
-      <section className="mt-4 rounded-xl border bg-white p-4">
-        <h2 className="font-semibold">파트너 생성 (기본 Create)</h2>
-        <form action={createPartner} className="mt-2 grid gap-2 md:grid-cols-3">
-          <input name="email" type="email" required placeholder="partner@company.com" className="rounded border px-2 py-1 text-sm" />
-          <input name="name" placeholder="업체명" className="rounded border px-2 py-1 text-sm" />
-          <button className="rounded bg-[#2E5C31] px-3 py-1 text-sm text-white">파트너 추가</button>
-        </form>
-      </section>
+        <UiCard title="파트너 생성" className="mt-6">
+          <form action={createPartner} className="grid gap-2 md:grid-cols-3">
+            <input name="email" type="email" required placeholder="partner@company.com" className="rounded-xl border px-3 py-2 text-sm" />
+            <input name="name" placeholder="업체명" className="rounded-xl border px-3 py-2 text-sm" />
+            <UiButton type="submit">파트너 추가</UiButton>
+          </form>
+        </UiCard>
 
-      <section className="mt-4 rounded-xl border bg-white p-4">
-        <h2 className="font-semibold">파트너 승인 상태 관리</h2>
-        <div className="mt-3 space-y-2">
-          {partners.length === 0 ? (
-            <p className="text-sm text-gray-500">파트너 계정이 없습니다.</p>
-          ) : (
-            partners.map(
-              (p: { id: string; email: string; name: string | null; partnerStatus: 'PENDING' | 'APPROVED' | 'REJECTED' }) => (
-                <article key={p.id} className="rounded-lg border p-3">
-                  <p className="text-sm font-medium">{p.name || '-'} ({p.email})</p>
-                  <div className="mt-2 flex flex-wrap items-center gap-2">
+        <UiCard title="파트너 승인 상태 관리" className="mt-6">
+          <div className="space-y-3">
+            {partners.length === 0 ? (
+              <p className="text-sm text-slate-500">파트너 계정이 없습니다.</p>
+            ) : (
+              partners.map((p: { id: string; email: string; name: string | null; partnerStatus: 'PENDING' | 'APPROVED' | 'REJECTED' }) => (
+                <article key={p.id} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <p className="font-semibold">{p.name || '-'} ({p.email})</p>
+                    <UiBadge>{p.partnerStatus}</UiBadge>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
                     <form action={updatePartnerStatus} className="flex items-center gap-2">
                       <input type="hidden" name="partnerId" value={p.id} />
-                      <select name="partnerStatus" defaultValue={p.partnerStatus} className="rounded border px-2 py-1 text-sm">
+                      <select name="partnerStatus" defaultValue={p.partnerStatus} className="rounded-xl border px-2 py-2 text-sm">
                         <option value="PENDING">PENDING</option>
                         <option value="APPROVED">APPROVED</option>
                         <option value="REJECTED">REJECTED</option>
                       </select>
-                      <button className="rounded bg-[#2E5C31] px-3 py-1 text-sm text-white">상태 저장</button>
+                      <UiButton type="submit">상태 저장</UiButton>
                     </form>
                     <form action={deletePartner}>
                       <input type="hidden" name="partnerId" value={p.id} />
-                      <button className="rounded border border-red-300 px-3 py-1 text-sm text-red-700">삭제</button>
+                      <button className="rounded-xl border border-red-300 px-4 py-2 text-sm font-semibold text-red-700">삭제</button>
                     </form>
                   </div>
                 </article>
-              )
-            )
-          )}
-        </div>
+              ))
+            )}
+          </div>
+        </UiCard>
       </section>
     </main>
   )
