@@ -1,7 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+// TODO: Enable Prisma client after DATABASE_URL + adapter strategy are finalized.
+// For MVP week1, Supabase SDK path is used primarily.
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient }
-
-export const prisma = globalForPrisma.prisma || new PrismaClient()
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+export const prisma = null
