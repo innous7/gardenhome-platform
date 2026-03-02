@@ -1,6 +1,7 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
+import Link from 'next/link'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 
 type Mode = 'magic' | 'login' | 'signup'
@@ -47,6 +48,16 @@ export default function AuthPage() {
     setLoading(false)
   }
 
+  const onOAuth = async (provider: 'google' | 'kakao') => {
+    setLoading(true)
+    setMessage('')
+    const supabase = createSupabaseBrowserClient()
+    const redirectTo = `${window.location.origin}${getNextPath()}`
+    const { error } = await supabase.auth.signInWithOAuth({ provider, options: { redirectTo } })
+    if (error) setMessage(`오류: ${error.message}`)
+    setLoading(false)
+  }
+
   const onEmailSignup = async (e: FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -76,6 +87,11 @@ export default function AuthPage() {
           <button onClick={() => setMode('signup')} className={`rounded-lg py-2 text-sm font-semibold ${mode === 'signup' ? 'bg-white text-[#1f4d2f]' : 'text-slate-600'}`}>회원가입</button>
         </div>
 
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          <button onClick={() => onOAuth('google')} disabled={loading} className="rounded-xl border px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60">Google 로그인</button>
+          <button onClick={() => onOAuth('kakao')} disabled={loading} className="rounded-xl border px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60">Kakao 로그인</button>
+        </div>
+
         <form onSubmit={mode === 'magic' ? onMagicLink : mode === 'login' ? onEmailLogin : onEmailSignup} className="mt-4 space-y-3">
           <input
             type="email"
@@ -101,6 +117,11 @@ export default function AuthPage() {
             {loading ? '처리 중...' : mode === 'magic' ? '매직링크 받기' : mode === 'login' ? '로그인' : '회원가입'}
           </button>
         </form>
+
+        <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
+          <Link href="/reset-password" className="hover:text-slate-700">비밀번호를 잊으셨나요?</Link>
+          <span>보안 로그인 지원</span>
+        </div>
 
         {message ? <p className="mt-3 text-sm text-slate-700">{message}</p> : null}
       </section>
