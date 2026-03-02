@@ -13,12 +13,19 @@ enum UserRole {
   ADMIN
 }
 
+enum PartnerStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model Users {
-  id        String   @id
-  email     String   @unique
-  role      UserRole @default(USER)
-  name      String?
-  createdAt DateTime @default(now())
+  id            String        @id
+  email         String        @unique
+  role          UserRole      @default(USER)
+  partnerStatus PartnerStatus @default(PENDING)
+  name          String?
+  createdAt     DateTime      @default(now())
 
   portfolios    Portfolios[]
   quoteRequests QuoteRequests[]
