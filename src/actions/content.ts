@@ -91,3 +91,39 @@ export async function getAdminContentSummary() {
     portfolio: portfolio.data || [],
   }
 }
+
+export async function deleteBlogPost(formData: FormData) {
+  const supabase = await createSupabaseServerClient()
+  const id = String(formData.get('id') || '')
+  if (!id) return
+  await supabase.from('BlogPosts').delete().eq('id', id)
+  revalidatePath('/blog')
+  revalidatePath('/admin/blog')
+}
+
+export async function deletePortfolioPost(formData: FormData) {
+  const supabase = await createSupabaseServerClient()
+  const id = String(formData.get('id') || '')
+  if (!id) return
+  await supabase.from('PortfolioPosts').delete().eq('id', id)
+  revalidatePath('/portfolio')
+  revalidatePath('/admin/blog')
+}
+
+export async function updateContentStatus(formData: FormData) {
+  const supabase = await createSupabaseServerClient()
+  const kind = String(formData.get('kind') || '')
+  const id = String(formData.get('id') || '')
+  const status = String(formData.get('status') || 'DRAFT').toUpperCase()
+  if (!id || !kind) return
+
+  if (kind === 'blog') {
+    await supabase.from('BlogPosts').update({ status }).eq('id', id)
+    revalidatePath('/blog')
+  }
+  if (kind === 'portfolio') {
+    await supabase.from('PortfolioPosts').update({ status }).eq('id', id)
+    revalidatePath('/portfolio')
+  }
+  revalidatePath('/admin/blog')
+}

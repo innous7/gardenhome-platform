@@ -1,6 +1,6 @@
 export const runtime = 'edge'
 
-import { createBlogPost, createPortfolioPost, getAdminContentSummary } from '@/actions/content'
+import { createBlogPost, createPortfolioPost, deleteBlogPost, deletePortfolioPost, getAdminContentSummary, updateContentStatus } from '@/actions/content'
 import BlockEditor from '@/components/features/block-editor'
 
 export default async function AdminBlogPage() {
@@ -52,13 +52,51 @@ export default async function AdminBlogPage() {
             <div>
               <h3 className="font-semibold">블로그</h3>
               <ul className="mt-2 space-y-2 text-sm">
-                {summary.blog.length === 0 ? <li className="text-slate-500">없음</li> : summary.blog.map((b: { id: string; title: string; status: string }) => <li key={b.id}>{b.title} · {b.status}</li>)}
+                {summary.blog.length === 0 ? <li className="text-slate-500">없음</li> : summary.blog.map((b: { id: string; title: string; status: string }) => (
+                  <li key={b.id} className="rounded-lg border p-2">
+                    <p>{b.title} · {b.status}</p>
+                    <div className="mt-1 flex items-center gap-2">
+                      <form action={updateContentStatus} className="flex items-center gap-1">
+                        <input type="hidden" name="kind" value="blog" />
+                        <input type="hidden" name="id" value={b.id} />
+                        <select name="status" defaultValue={b.status} className="rounded border px-2 py-1 text-xs">
+                          <option value="PUBLISHED">PUBLISHED</option>
+                          <option value="DRAFT">DRAFT</option>
+                        </select>
+                        <button className="rounded border px-2 py-1 text-xs">변경</button>
+                      </form>
+                      <form action={deleteBlogPost}>
+                        <input type="hidden" name="id" value={b.id} />
+                        <button className="rounded border border-red-300 px-2 py-1 text-xs text-red-700">삭제</button>
+                      </form>
+                    </div>
+                  </li>
+                ))}
               </ul>
             </div>
             <div>
               <h3 className="font-semibold">포트폴리오</h3>
               <ul className="mt-2 space-y-2 text-sm">
-                {summary.portfolio.length === 0 ? <li className="text-slate-500">없음</li> : summary.portfolio.map((p: { id: string; title: string; status: string }) => <li key={p.id}>{p.title} · {p.status}</li>)}
+                {summary.portfolio.length === 0 ? <li className="text-slate-500">없음</li> : summary.portfolio.map((p: { id: string; title: string; status: string }) => (
+                  <li key={p.id} className="rounded-lg border p-2">
+                    <p>{p.title} · {p.status}</p>
+                    <div className="mt-1 flex items-center gap-2">
+                      <form action={updateContentStatus} className="flex items-center gap-1">
+                        <input type="hidden" name="kind" value="portfolio" />
+                        <input type="hidden" name="id" value={p.id} />
+                        <select name="status" defaultValue={p.status} className="rounded border px-2 py-1 text-xs">
+                          <option value="PUBLISHED">PUBLISHED</option>
+                          <option value="DRAFT">DRAFT</option>
+                        </select>
+                        <button className="rounded border px-2 py-1 text-xs">변경</button>
+                      </form>
+                      <form action={deletePortfolioPost}>
+                        <input type="hidden" name="id" value={p.id} />
+                        <button className="rounded border border-red-300 px-2 py-1 text-xs text-red-700">삭제</button>
+                      </form>
+                    </div>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
