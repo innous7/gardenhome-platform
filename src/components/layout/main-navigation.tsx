@@ -10,6 +10,7 @@ const menus = [
   { href: '/community', label: '커뮤니티' },
   { href: '/blog', label: '블로그' },
   { href: '/flotren', label: '플로트렌' },
+  { href: '/companies', label: '조경회사' },
   { href: '/my-page', label: '마이' },
 ]
 

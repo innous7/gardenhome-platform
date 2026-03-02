@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 const highlights = [
   { title: '검증된 파트너', desc: '사업자/포트폴리오 검증을 통과한 조경업체만 연결합니다.' },
   { title: '투명한 견적 비교', desc: '조건/금액/메모를 한 화면에서 비교해 빠르게 선택합니다.' },
@@ -16,15 +18,17 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-6 pb-12 pt-16 md:pt-24">
         <div className="rounded-3xl bg-gradient-to-br from-[#1f4d2f] to-[#2f6d42] p-8 text-white md:p-12">
           <p className="text-sm font-medium text-emerald-100">조경홈 GardenHOME</p>
-          <h1 className="mt-3 text-3xl font-bold leading-tight md:text-5xl">조경 시공, 믿을 수 있게
+          <h1 className="mt-3 text-3xl font-bold leading-tight md:text-5xl">
+            조경 시공, 믿을 수 있게
             <br className="hidden md:block" />
-            견적부터 비교까지 한 번에.</h1>
+            견적부터 비교까지 한 번에.
+          </h1>
           <p className="mt-4 max-w-2xl text-sm text-emerald-50 md:text-base">
             오늘의집/집닥처럼 익숙한 탐색 경험에, 조경 특화 견적 흐름을 결합한 매칭 플랫폼입니다.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <a href="/request-quote" className="rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[#1f4d2f]">견적 요청 시작</a>
-            <a href="/portfolio" className="rounded-xl border border-white/40 px-5 py-3 text-sm font-semibold text-white">포트폴리오 보기</a>
+            <Link href="/request-quote" className="rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[#1f4d2f]">견적 요청 시작</Link>
+            <Link href="/portfolio" className="rounded-xl border border-white/40 px-5 py-3 text-sm font-semibold text-white">포트폴리오 보기</Link>
           </div>
         </div>
 
@@ -44,10 +48,10 @@ export default function Home() {
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             {quickLinks.map((card) => (
-              <a key={card.title} href={card.path} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+              <Link key={card.title} href={card.path} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                 <h3 className="text-lg font-semibold">{card.title}</h3>
                 <p className="mt-2 text-sm text-slate-600">{card.desc}</p>
-              </a>
+              </Link>
             ))}
           </div>
         </section>

@@ -79,6 +79,42 @@ export async function getPortfolioPosts() {
   return data || []
 }
 
+export async function getPortfolioPostById(id: string) {
+  const supabase = await createSupabaseServerClient()
+  const { data } = await supabase.from('PortfolioPosts').select('*').eq('id', id).single()
+  return data
+}
+
+export async function getPartnerCompanies() {
+  const supabase = await createSupabaseServerClient()
+  const { data } = await supabase
+    .from('Users')
+    .select('id,email,name,partnerStatus,createdAt')
+    .eq('role', 'PARTNER')
+    .eq('partnerStatus', 'APPROVED')
+    .order('createdAt', { ascending: false })
+  return data || []
+}
+
+export async function getPartnerCompanyById(id: string) {
+  const supabase = await createSupabaseServerClient()
+  const { data: company } = await supabase
+    .from('Users')
+    .select('id,email,name,partnerStatus,createdAt')
+    .eq('id', id)
+    .eq('role', 'PARTNER')
+    .single()
+
+  const { data: portfolios } = await supabase
+    .from('PortfolioPosts')
+    .select('id,title,budget,content,status,createdAt,company')
+    .eq('status', 'PUBLISHED')
+    .eq('company', company?.name || '')
+    .order('createdAt', { ascending: false })
+
+  return { company, portfolios: portfolios || [] }
+}
+
 export async function getAdminContentSummary() {
   const supabase = await createSupabaseServerClient()
   const [blog, portfolio] = await Promise.all([
