@@ -18,7 +18,7 @@ export default async function PortfolioPage() {
           ) : (
             posts.map((item: { id: string; title: string; company?: string; budget?: string }) => (
               <Link key={item.id} href={`/portfolio/${item.id}`} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                <h2 className="text-xl font-semibold">{item.title}</h2>
+                <h2 className="text-xl font-semibold text-slate-900">{item.title}</h2>
                 <p className="mt-1 text-sm text-slate-600">업체: {item.company || '-'} · 예산: {item.budget || '-'}</p>
                 <p className="mt-3 text-sm font-semibold text-[#1f4d2f]">상세 보기 →</p>
               </Link>
