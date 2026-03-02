@@ -79,3 +79,24 @@ model AuditLogs {
   metadata   Json?
   createdAt  DateTime @default(now())
 }
+
+model BlogPosts {
+  id        String   @id @default(cuid())
+  authorId  String?
+  title     String
+  summary   String?
+  content   Json
+  status    String   @default("PUBLISHED")
+  createdAt DateTime @default(now())
+}
+
+model PortfolioPosts {
+  id        String   @id @default(cuid())
+  authorId  String?
+  title     String
+  company   String?
+  budget    String?
+  content   Json
+  status    String   @default("PUBLISHED")
+  createdAt DateTime @default(now())
+}
