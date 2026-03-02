@@ -1,3 +1,5 @@
+export const runtime = 'edge'
+
 import { getPortfolioPostById } from '@/actions/content'
 import BlockRenderer, { type ContentBlock } from '@/components/features/block-renderer'
 

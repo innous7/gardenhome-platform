@@ -1,3 +1,5 @@
+export const runtime = 'edge'
+
 import { getPartnerCompanyById } from '@/actions/content'
 import BlockRenderer, { type ContentBlock } from '@/components/features/block-renderer'
 
