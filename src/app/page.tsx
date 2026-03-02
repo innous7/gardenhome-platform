@@ -1,7 +1,9 @@
 const cards = [
-  { title: "고객", path: "/portfolio", desc: "포트폴리오 탐색 / 견적 요청" },
-  { title: "파트너", path: "/dashboard", desc: "견적 요청 확인 / 견적 작성" },
-  { title: "관리자", path: "/dashboard", desc: "업체 승인 / 기본 운영" },
+  { title: '고객', path: '/portfolio', desc: '포트폴리오 탐색 / 견적 요청' },
+  { title: '견적요청', path: '/request-quote', desc: '로그인 후 견적 요청 작성' },
+  { title: '마이페이지', path: '/my-page', desc: '계정/권한 확인' },
+  { title: '파트너', path: '/partner/dashboard', desc: '견적 요청 확인 / 견적 작성' },
+  { title: '관리자', path: '/admin/dashboard', desc: '업체 승인 / 기본 운영' },
 ]
 
 export default function Home() {
