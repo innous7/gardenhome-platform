@@ -13,6 +13,23 @@ export default function BlockEditor({ name = 'blocks' }: { name?: string }) {
 
   const add = (type: Block['type']) => setBlocks((prev) => [...prev, { type, value: '', bold: false }])
 
+  const move = (idx: number, dir: -1 | 1) => {
+    setBlocks((prev) => {
+      const next = [...prev]
+      const target = idx + dir
+      if (target < 0 || target >= next.length) return prev
+      ;[next[idx], next[target]] = [next[target], next[idx]]
+      return next
+    })
+  }
+
+  const remove = (idx: number) => {
+    setBlocks((prev) => {
+      const next = prev.filter((_, i) => i !== idx)
+      return next.length ? next : [{ type: 'paragraph', value: '' }]
+    })
+  }
+
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap gap-2">
@@ -26,16 +43,21 @@ export default function BlockEditor({ name = 'blocks' }: { name?: string }) {
         <div key={`${b.type}-${i}`} className="rounded-xl border p-3">
           <div className="mb-2 flex items-center justify-between text-xs text-slate-500">
             <span>{b.type.toUpperCase()}</span>
-            {(b.type === 'paragraph' || b.type === 'heading') && (
-              <label className="flex items-center gap-1">
-                <input type="checkbox" checked={!!b.bold} onChange={(e) => update(i, { bold: e.target.checked })} /> 굵게
-              </label>
-            )}
+            <div className="flex items-center gap-2">
+              {(b.type === 'paragraph' || b.type === 'heading') && (
+                <label className="flex items-center gap-1">
+                  <input type="checkbox" checked={!!b.bold} onChange={(e) => update(i, { bold: e.target.checked })} /> 굵게
+                </label>
+              )}
+              <button type="button" onClick={() => move(i, -1)} className="rounded border px-2 py-0.5">↑</button>
+              <button type="button" onClick={() => move(i, 1)} className="rounded border px-2 py-0.5">↓</button>
+              <button type="button" onClick={() => remove(i)} className="rounded border border-red-300 px-2 py-0.5 text-red-600">삭제</button>
+            </div>
           </div>
           <textarea
             value={b.value}
             onChange={(e) => update(i, { value: e.target.value })}
-            placeholder={b.type === 'image' || b.type === 'video' ? 'https://...' : '내용 입력'}
+            placeholder={b.type === 'image' ? '이미지 URL' : b.type === 'video' ? '유튜브 URL 또는 임베드 URL' : '내용 입력'}
             className="min-h-20 w-full rounded-lg border px-3 py-2 text-sm"
           />
         </div>

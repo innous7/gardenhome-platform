@@ -5,11 +5,28 @@ import { revalidatePath } from 'next/cache'
 
 type Block = { type: 'paragraph' | 'heading' | 'image' | 'video'; text?: string; url?: string; bold?: boolean }
 
+function normalizeVideoUrl(url?: string) {
+  if (!url) return url
+  if (url.includes('youtube.com/watch?v=')) {
+    const id = url.split('v=')[1]?.split('&')[0]
+    return id ? `https://www.youtube.com/embed/${id}` : url
+  }
+  if (url.includes('youtu.be/')) {
+    const id = url.split('youtu.be/')[1]?.split('?')[0]
+    return id ? `https://www.youtube.com/embed/${id}` : url
+  }
+  return url
+}
+
 function parseBlocks(raw: FormDataEntryValue | null): Block[] {
   if (!raw) return []
   try {
     const parsed = JSON.parse(String(raw))
-    return Array.isArray(parsed) ? parsed : []
+    if (!Array.isArray(parsed)) return []
+    return parsed.map((b) => ({
+      ...b,
+      url: b.type === 'video' ? normalizeVideoUrl(b.url) : b.url,
+    }))
   } catch {
     return []
   }
@@ -23,14 +40,7 @@ export async function createBlogPost(formData: FormData) {
   const blocks = parseBlocks(formData.get('blocks'))
   if (!title || blocks.length === 0) return
 
-  await supabase.from('BlogPosts').insert({
-    authorId: auth.user?.id || null,
-    title,
-    summary: summary || null,
-    content: blocks,
-    status: 'PUBLISHED',
-  })
-
+  await supabase.from('BlogPosts').insert({ authorId: auth.user?.id || null, title, summary: summary || null, content: blocks, status: 'PUBLISHED' })
   revalidatePath('/blog')
   revalidatePath('/admin/blog')
 }
@@ -44,15 +54,7 @@ export async function createPortfolioPost(formData: FormData) {
   const blocks = parseBlocks(formData.get('blocks'))
   if (!title || blocks.length === 0) return
 
-  await supabase.from('PortfolioPosts').insert({
-    authorId: auth.user?.id || null,
-    title,
-    company: company || null,
-    budget: budget || null,
-    content: blocks,
-    status: 'PUBLISHED',
-  })
-
+  await supabase.from('PortfolioPosts').insert({ authorId: auth.user?.id || null, title, company: company || null, budget: budget || null, content: blocks, status: 'PUBLISHED' })
   revalidatePath('/portfolio')
   revalidatePath('/admin/blog')
 }

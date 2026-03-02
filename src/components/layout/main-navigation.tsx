@@ -8,6 +8,7 @@ const menus = [
   { href: '/portfolio', label: '포트폴리오' },
   { href: '/request-quote', label: '견적요청' },
   { href: '/community', label: '커뮤니티' },
+  { href: '/blog', label: '블로그' },
   { href: '/flotren', label: '플로트렌' },
   { href: '/my-page', label: '마이' },
 ]
